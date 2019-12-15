@@ -1,10 +1,72 @@
 <?PHP
-
+// indian beaten coffee ratio: for every 4-5 teaspoon of sugar crystals, use 1 heaped spoon of fine grain instant coffee with a few drops of water.
 $inp = "Hello";
-simpleCrypter($inp, 5);
-doubCrypter($inp);
+simpleCrypter($inp, "xyzabcghidefjklqrsmnoptuvw");
+simpleDecrypter("hbffl", "xyzabcghidefjklqrsmnoptuvw");
+//doubCrypter($inp);
 
-function simpleCrypter ($input, $transPosNum = 0){  // for performing Caesar's cypher/ simple substitution
+function simpleCrypter ($input, $key){          // simple substitution encrypter
+
+  $keyLen = 26;
+  if (strlen($key) != $keyLen){
+      echo "\n INVALID KEY! \n";
+      return;
+  }
+
+  $i = 0;
+  $gen = "abcdefghijklmnopqrstuvwxyz";
+  $keyMapTemp = str_split($gen);
+  $keyMapInp = str_split($key);
+  $plaintxt = str_split(strtolower($input));
+  $ciphertxt = "";
+
+  $keyMap;
+
+  for ($i = 0; $i < sizeOf($keyMapTemp); $i++){       // ties the key values to the alphabetical values and generates an associative array
+    $keyMap[$keyMapTemp[$i]] = $keyMapInp[$i];
+  }
+
+  for ($i = 0; $i < sizeOf($plaintxt); $i++){         // converts plaintext into ciphertext
+    $ciphertxt .= $keyMap[$plaintxt[$i]];
+  }
+  echo "Plain text: ".$input."\n";
+  echo "cipher text: ".$ciphertxt."\n";
+}
+
+// --------------------------------------------------------------------- //
+
+function simpleDecrypter($input, $key){               // simple substitution decrypter
+  $keyLen = 26;
+  if (strlen($key) != $keyLen){
+      echo "\n INVALID KEY! \n";
+      return;
+  }
+
+  $i = 0;
+  $gen = "abcdefghijklmnopqrstuvwxyz";
+  $keyMapTemp = str_split($gen);
+  $keyMapInp = str_split($key);
+  $plaintxt = "";
+  $ciphertxt = str_split(strtolower($input));
+
+  $keyMap;
+
+  for ($i = 0; $i < sizeOf($keyMapTemp); $i++){       // ties the key values to the alphabetical values and generates an associative array
+    $keyMap[$keyMapInp[$i]] = $keyMapTemp[$i];
+  }
+
+  for ($i = 0; $i < sizeOf($ciphertxt); $i++){         // converts ciphertext into plaintext
+    $plaintxt .= $keyMap[$ciphertxt[$i]];
+  }
+  echo "Plain text: ".$plaintxt."\n";
+  echo "cipher text: ".$input."\n";
+
+}
+
+// --------------------------------------------------------------------- //
+                        //   REDUNDANT CODE HERE!!
+
+function CaesarCrypter ($input, $transPosNum = 0){  // for performing Caesar's cypher/ simple substitution
 
   $unModdedTxt = str_split($input);
   $moddedTxt = "";
@@ -43,6 +105,8 @@ function simpleCrypter ($input, $transPosNum = 0){  // for performing Caesar's c
 
   return $moddedTxt;
 }
+
+// --------------------------------------------------------------------- //
 
 function doubCrypter($input){           // function for performing double transposition on given string
   $unModdedTxt = $input;
