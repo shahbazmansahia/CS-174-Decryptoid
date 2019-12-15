@@ -289,3 +289,15 @@ function RC4Crypter ($input){
   // KEYSTREAM SHUFFLE ENDS
 
 }
+
+// --------------------------------------------------------------------- //
+
+function RC4Decrypter ($input){
+
+}
+
+// --------------------------------------------------------------------- //
+
+function DESCrypter ($input){
+
+}
