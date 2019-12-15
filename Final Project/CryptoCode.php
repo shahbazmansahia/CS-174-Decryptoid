@@ -106,7 +106,8 @@ function CaesarCrypter ($input, $transPosNum = 0){  // for performing Caesar's c
   return $moddedTxt;
 }
 
-// --------------------------------------------------------------------- //
+// --------------------------------------------------------------------- //                 FIX ME: DOUBLE TRANSPOSITION FUNCTION NEEDS THE TRANSPOSITION PORTION FIXED AND ALSO NEEDS OPTIMIZATION!
+
 
 function doubCrypter($input){           // function for performing double transposition on given string
   $unModdedTxt = $input;
@@ -238,4 +239,53 @@ function doubCrypter($input){           // function for performing double transp
   echo strlen($moddedTxt)."\n";
 
   return $moddedTxt;
+}
+
+// --------------------------------------------------------------------- //
+
+function RC4Crypter ($input){
+  // INITIALIZATION FOR STREAM BEGINS HERE!
+  $s;
+  $key;
+  $k;                               // Keystream array
+  $i = 0;
+  $j = 0;
+  $t = 0;
+  $temp = 0;
+  $byteCap = 256;
+  $n = rand(0, 256);                // FIX ME: 'n' bytes of key; randomly generated due to lack of understanding; CORRECT TO DESIRABLE VALUE
+
+  for ($i = 0; $i < $byteCap; $i++){
+    $s[$i] = $i;
+    $k[$i] = $key[$i % $n];
+  }
+
+  for($i = 0; $i < $byteCap; $i++){
+    $j = ($j + $s[$i] + $k[$i]) % 256;
+    $temp = $s [$i];
+    $s [$i] = $s [$j];
+    $s[$j] = $temp;
+  }
+
+  $i = 0;
+  $j = 0;
+  $temp = 0;
+
+  // INITIALIZATION FOR STREAM ENDS HERE!
+
+  // KEYSTREAM SHUFFLE BEGINS
+
+
+  foreach ($k as $value){         //FIX ME: Test this; I don't have a lot of xp with foreach loops and iterator loops so this loop's logic might need tweaking
+    $i = ($i + 1) % 256;
+    $j = ($j + $s [$i]) % 256;
+    $temp = $s [$i];
+    $s [$i] = $s [$j];
+    $s [$j] = $temp;
+    $t = ($s [$i] + $s [$j]) % 256;
+    $value = $s[$t];
+  }
+
+  // KEYSTREAM SHUFFLE ENDS
+
 }
