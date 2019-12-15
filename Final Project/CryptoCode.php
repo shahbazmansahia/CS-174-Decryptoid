@@ -54,12 +54,15 @@ function doubCrypter($input){           // function for performing double transp
     return $moddedTxt;
   }
 
-  $numRows = floor ((strlen($unModdedTxt) / (2)) - 1);
-  $numCols = strlen($unModdedTxt) - 1 - $numRows;
+  $numRows = floor ((strlen($unModdedTxt) / (2))) - 1;
+  echo "NumRows: ".$numRows."\n";
+  $numCols = strlen($unModdedTxt) - $numRows - 2;
+  echo "NumCols: ".$numCols."\n";
 
   $wordArray;       // will contain the unmodified string for double transposition
   $i = 0;
   $j = 0;
+  $k = 0;
   $key;             // contains the key for the transposition elements
   $rowTrans1;        // buffer value representing row for transposition
   $rowTrans2;        // buffer value to be swapped with the other row
@@ -72,8 +75,12 @@ function doubCrypter($input){           // function for performing double transp
     $key [0] [$i] = $i;
     for ($j = 0; $j <= $numCols; $j++){
       $key [1] [$j] = $j;
-      $wordArray [$i] [$j] = $unModdedTxt{$i + $j};
+      //$wordArray [$i] [$j] = $unModdedTxt{$i + $j};
+      $wordArray [$i] [$j] = $unModdedTxt{$k};
+      $k++;
+      echo $i." ".$j."\n ".$wordArray[$i][$j]."\n";
     }
+    echo "\n";
   }
 
 
