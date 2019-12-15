@@ -123,17 +123,22 @@ function doubCrypter($input){           // function for performing double transp
   $numCols = strlen($unModdedTxt) - $numRows - 2;
   echo "NumCols: ".$numCols."\n";
 
+  $zero = 0;
   $wordArray;       // will contain the unmodified string for double transposition
   $i = 0;
   $j = 0;
   $k = 0;
   $key;             // contains the key for the transposition elements
-  $rowTrans1;        // buffer value representing row for transposition
-  $rowTrans2;        // buffer value to be swapped with the other row
-  $colTrans1;        // buffer value representing column for transposition
-  $colTrans2;        // buffer value to be swapped witht the other column
+  $rowTrans;        // buffer value representing row for transposition
+  //$rowTrans2;        // buffer value to be swapped with the other row
+  $colTrans;        // buffer value representing column for transposition
+  //$colTrans2;        // buffer value to be swapped witht the other column
   $temp;
   $numShuffles = rand(floor(strlen($unModdedTxt) / 2), strlen($unModdedTxt));     // number of times the transposition shuffler loop will run
+  $rowSwapped;
+  $colSwapped;
+
+  //echo "Size: ".sizeOf($rowSwapped)."\n";
 
   for ($i = 0; $i <= $numRows; $i++){     // sorts word's characters into the 2D array for transposition
     $key [0] [$i] = $i;
@@ -147,22 +152,58 @@ function doubCrypter($input){           // function for performing double transp
     echo "\n";
   }
 
+  for ($i = 0; $i <= $numRows; $i++){          // transposes the rows and records the rows swapped
 
-  for ($i = 0; $i < $numShuffles; $i++){      // the actual loop that carries out the double transposition process
-
-    $rowTrans1 = rand(0, $numRows);
-    $colTrans1 = rand(0, $numCols);
 
     do{
-      $rowTrans2 = rand(0, $numRows);
-      $colTrans2 = rand(0, $numCols);
-    }while (($rowTrans1 == $rowTrans2) || ($colTrans1 == $colTrans2));
+      $rowTrans = rand($i, $numRows);
+      if (sizeOf($rowSwapped) == $zero){
+        $rowSwapped[] = $rowTrans;
+        break;
+      }
+      //print_r($rowSwapped);
+    }while (in_array ($rowTrans, $rowSwapped));
+
+    for ($j = 0; $j < $numCols; $j++){       // transposition of rows occurs in this loop
+      $temp = $wordArray [$i] [$j];
+      $wordArray [$i] [$j] = $wordArray [$rowTrans] [$j];
+      $wordArray [$rowTrans] [$j] = $temp;
+    }
+    $rowSwapped[] = $rowTrans;
+  }
+
+  for ($j= 0; $j < $numCols; $j++){          // transposes the columns and records the columns swapped
+
+    do{
+      $colTrans = rand($i, $numRows);
+      if (sizeOf($colSwapped) == $zero){
+        $colSwapped[] = $colTrans;
+        break;
+      }
+      //print_r($colSwapped);
+    }while (in_array($colTrans, $colSwapped));
+
+    for ($i = 0; $i <= $numRows; $i++){       // transposition of columns occurs in this loop
+      $temp = $wordArray [$i] [$j];
+      $wordArray [$i] [$j] = $wordArray [$i] [$colTrans];
+      $wordArray [$i] [$colTrans] = $temp;
+    }
+    $colSwapped[] = $colTrans;
+  }
+  /*
+  for ($i = 0; $i < $numRows; $i++){      // the actual loop that carries out the double transposition process
+
+    do{
+      $rowTrans = rand($i, $numRows);
+      //$colTrans = rand(0, $numCols);
+    }while (in_array ($rowTrans, $rowSwapped));
 
     for($j = 0; $j <= $numCols; $j++){      // loop for swapping values in the row
-      $temp = $wordArray [$rowTrans1] [$j];
-      $wordArray [$rowTrans1] [$j] = $wordArray [$rowTrans2] [$j];
-      $wordArray [$rowTrans2] [$j] = $temp;
+      $temp = $wordArray [$i] [$j];
+      $wordArray [$i] [$j] = $wordArray [$rowTrans] [$j];
+      $wordArray [$rowTrans] [$j] = $temp;
     }
+
 
     $temp = $key [0] [$rowTrans1];          // swaps the key values based on the changes in the rows
     $key [0] [$rowTrans1] = $key [0] [$rowTrans2];
@@ -179,12 +220,17 @@ function doubCrypter($input){           // function for performing double transp
     $key [1] [$colTrans2] = $temp;
 
   }
+  */
+
+  $key[] = $rowSwapped;
+  $key[] = $colSwapped;
 
   for ($i = 0; $i <= $numRows; $i++){
     for($j = 0; $j <= $numCols; $j++ ){
       $moddedTxt .= $wordArray[$i][$j];
     }
   }
+
 
   echo $input."\n";
   echo strlen($input)."\n";
