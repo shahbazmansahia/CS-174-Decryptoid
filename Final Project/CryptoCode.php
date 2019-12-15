@@ -1,67 +1,57 @@
 <?PHP
 // indian beaten coffee ratio: for every 4-5 teaspoon of sugar crystals, use 1 heaped spoon of fine grain instant coffee with a few drops of water.
 $inp = "Hello";
-simpleCrypter($inp, "xyzabcghidefjklqrsmnoptuvw");
-simpleDecrypter("hbffl", "xyzabcghidefjklqrsmnoptuvw");
-//doubCrypter($inp);
+simpleCrypter($inp, "-xyzabcghidefjklqrsmnoptuvw");
+simpleDecrypter("hbffl", "-xyzabcghidefjklqrsmnoptuvw");
+RC4Crypter($inp, [5, 6, 10, 8, 9, 15, 21, 11, 13, 7, 23, 17, 19, 29, 31, 37, 41, 43, 47]);
 
-function simpleCrypter ($input, $key){          // simple substitution encrypter
-
-  $keyLen = 26;
+function simpleCrypter($input, $key){          // simple substitution encrypter
+  $keyLen = 27;
   if (strlen($key) != $keyLen){
-      echo "\n INVALID KEY! \n";
+      echo "\n INVALID KEY! NOTE: we need 27 alphabets in the key (spaces are included!)\n";
       return;
   }
-
   $i = 0;
-  $gen = "abcdefghijklmnopqrstuvwxyz";
+  $gen = " abcdefghijklmnopqrstuvwxyz";
   $keyMapTemp = str_split($gen);
   $keyMapInp = str_split($key);
   $plaintxt = str_split(strtolower($input));
   $ciphertxt = "";
-
   $keyMap;
-
   for ($i = 0; $i < sizeOf($keyMapTemp); $i++){       // ties the key values to the alphabetical values and generates an associative array
     $keyMap[$keyMapTemp[$i]] = $keyMapInp[$i];
   }
-
   for ($i = 0; $i < sizeOf($plaintxt); $i++){         // converts plaintext into ciphertext
     $ciphertxt .= $keyMap[$plaintxt[$i]];
   }
-  echo "Plain text: ".$input."\n";
+  echo "Plain text: ".$input."<br>\n";
   echo "cipher text: ".$ciphertxt."\n";
 }
-
 // --------------------------------------------------------------------- //
-
 function simpleDecrypter($input, $key){               // simple substitution decrypter
-  $keyLen = 26;
+  $keyLen = 27;
   if (strlen($key) != $keyLen){
-      echo "\n INVALID KEY! \n";
+      echo "\n INVALID KEY! NOTE: we need 27 alphabets in the key (spaces are included!) \n";
       return;
   }
-
   $i = 0;
-  $gen = "abcdefghijklmnopqrstuvwxyz";
+  $gen = " abcdefghijklmnopqrstuvwxyz";
   $keyMapTemp = str_split($gen);
   $keyMapInp = str_split($key);
   $plaintxt = "";
   $ciphertxt = str_split(strtolower($input));
-
   $keyMap;
-
   for ($i = 0; $i < sizeOf($keyMapTemp); $i++){       // ties the key values to the alphabetical values and generates an associative array
     $keyMap[$keyMapInp[$i]] = $keyMapTemp[$i];
   }
-
   for ($i = 0; $i < sizeOf($ciphertxt); $i++){         // converts ciphertext into plaintext
     $plaintxt .= $keyMap[$ciphertxt[$i]];
   }
-  echo "Plain text: ".$plaintxt."\n";
-  echo "cipher text: ".$input."\n";
+  echo "cipher text: ".$input."<br> \n";
+  echo "Plain text: ".$plaintxt."<br> \n";
 
 }
+
 
 // --------------------------------------------------------------------- //
                         //   REDUNDANT CODE HERE!!
@@ -243,25 +233,32 @@ function doubCrypter($input){           // function for performing double transp
 
 // --------------------------------------------------------------------- //
 
-function RC4Crypter ($input){
+function RC4Crypter ($input, $key){
   // INITIALIZATION FOR STREAM BEGINS HERE!
-  $s;
-  $key;
-  $k;                               // Keystream array
-  $i = 0;
-  $j = 0;
-  $t = 0;
-  $temp = 0;
-  $byteCap = 256;
+  $s;                                     // the first stream we init in RC4
+  $k = $key;                               // Keystream array
+  $i = 0;                                  // for loops
+  $j = 0;                                  // for loops
+  $t;                                     // temporary array for RC4; initially contains the key or a repeated key array (iff it's less than 256 in size)
+  $temp = 0;                              // for swaps
+  $byteCap = 256;                         // this is the RC4 cipher cap in general as it works with 256 bytes
   $n = rand(0, 256);                // FIX ME: 'n' bytes of key; randomly generated due to lack of understanding; CORRECT TO DESIRABLE VALUE
+
+  $plaintxt = $input;
+  $ciphertxt = "";
 
   for ($i = 0; $i < $byteCap; $i++){
     $s[$i] = $i;
-    $k[$i] = $key[$i % $n];
+    //$k[$i] = $key[$i % $n];
   }
 
+  for ($i = 0; $i < $byteCap; $i++){
+    $t[] = $key[$i % sizeOf($key)];
+  }
+
+
   for($i = 0; $i < $byteCap; $i++){
-    $j = ($j + $s[$i] + $k[$i]) % 256;
+    $j = ($j + $s[$i] + $t[$i]) % 256;
     $temp = $s [$i];
     $s [$i] = $s [$j];
     $s[$j] = $temp;
@@ -287,6 +284,17 @@ function RC4Crypter ($input){
   }
 
   // KEYSTREAM SHUFFLE ENDS
+
+  // The plaintext encryption starts here!
+
+  for ($i = 0; $i < strlen($plaintxt); $i++){
+    $ciphertxt.= ($plaintxt{$i} XOR $k [$i])." ";
+  }
+
+  echo "plaintext: ".$plaintxt."\n";
+  echo "ciphertext: ".$ciphertxt."\n";
+
+  return $ciphertxt;
 
 }
 
