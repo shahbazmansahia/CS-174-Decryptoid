@@ -310,7 +310,7 @@ function RC4Decrypter ($input){
 
 // --------------------------------------------------------------------- //
 
-function DESCrypter($input, $key){
+function DESCrypter($input, $key){              // DES encryption function; relies on various helper functions
   $numRounds = 16;
   $subKeyArray = str_split($key, 16);
   $plaintxtArray = str_split($input, 64);
@@ -325,7 +325,7 @@ function DESCrypter($input, $key){
 
 }
 
-function DESDecrypter($input, $key){              // decrypting is done by simply using the keys in the reverse order; it works due to the nature of XOR functions 
+function DESDecrypter($input, $key){              // decrypting is done by simply using the keys in the reverse order; it works due to the nature of XOR functions
   $numRounds = 16;
   $subKeyArray = str_split($key, 16);
   $plaintxtArray = str_split($input, 64);
@@ -436,6 +436,18 @@ function hexToTex($input){                          // for converting text value
     $texVal = chr($ascVal);
     $answer.= $texVal;
   }
+
+  return $answer;
+}
+
+function keyShift($input){                                // function intended to shift the subkey
+  $answer;
+
+  return $answer;
+}
+
+function keyCompress($input){                             // function meant to compress the subkey to 48 bits
+  $answer;
 
   return $answer;
 }
