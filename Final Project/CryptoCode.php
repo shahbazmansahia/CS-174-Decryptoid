@@ -310,10 +310,72 @@ function RC4Decrypter ($input){
 
 // --------------------------------------------------------------------- //
 
-function DESCrypter ($input){
+function DESCrypter($input, $key){
+  $numRounds = 16;
+  $subKeyArray = str_split($key, 16);
+  $plaintxtArray = str_split($input, 64);
+  $ciphertxtArray;
+  $ciphertxt;
+  $i = 0;
+  for($i = 0; $i < $numRounds; $i++){
+    $ciphertxtArray[] = DESCrypterRounds($plaintxtArray[$i], $subKeyArray[$i]);
+    $ciphertxt .= $ciphertxtArray[$i];
+  }
+
 
 }
 
+function DESDecrypter($input, $key){              // decrypting is done by simply using the keys in the reverse order; it works due to the nature of XOR functions 
+  $numRounds = 16;
+  $subKeyArray = str_split($key, 16);
+  $plaintxtArray = str_split($input, 64);
+  $ciphertxtArray;
+  $ciphertxt;
+  $minVal = 0;
+  $i = 0;
+  $j = 0;
+  for($i = $numRounds - 1; $i >= $minVal; $i++){
+    $ciphertxtArray[] = DESCrypterRounds($plaintxtArray[$j], $subKeyArray[$i]);
+    $ciphertxt .= $ciphertxtArray[$i];
+    $j++;
+  }
+
+
+}
+
+
+function DESCrypterRounds ($input, $key){
+  $validInpSize = 64;
+  $validKeySize = 56;
+  $i = 0;
+
+  if ($input != $validInpSize){
+    echo "INCORRECT INPUT SIZE! MUST BE OF LENGTH 64! \n";
+  }
+
+  if ($key != $validKeySize){
+    echo "INCORRECT Key SIZE! MUST BE OF SIZE 56! \n";
+  }
+
+  $splitInp = str_split($input, 32);
+  $lInitial = $splitInp [0];
+  $rInitial = $splitInp [1];
+  $finalMerge[] = $rInitial;
+
+
+  $rtemp;           // container for storing the changing value of R throughout the process
+  $rtemp = expansionBox($rInitial);
+  $rtemp = msgProcess($rtemp, $key);
+  $rtemp = subBox($rtemp);
+  $rtemp = permuteBox($rtemp);
+  $temp;            // buffer for swaps and ops
+  for ($i = 0; $i < sizeOf($rtemp); $i++){        // rtemp size is 32 at this point
+    $rtemp[$i] = $lInitial{$i} XOR $rtemp[$i]
+  }
+  $finalMerge[] = $rtemp;
+  return $finalMerge;
+}
+/*
 function CrapTextToHex ($input){              // DEFUNCT FUNCTION
   $binVal = "";
   $i = 0;
@@ -347,8 +409,8 @@ function CrapTextToHex ($input){              // DEFUNCT FUNCTION
   }
   return $answer;
 }
-
-function TexToHex ($input){        // mcuh more efficient and better!
+*/
+function TexToHex ($input){        // for converting hexadecimal values to text; much more efficient and better!
   $answer = "";
   $hexVal;
   $ascVal;
@@ -363,7 +425,7 @@ function TexToHex ($input){        // mcuh more efficient and better!
   return $answer;
 }
 
-function hexToTex($input){
+function hexToTex($input){                          // for converting text values to hexadecimal
   $answer = "";
   $texVal;
   $ascVal;
@@ -415,7 +477,7 @@ function expansionBox ($input){                     // takes input value array a
 
   $expInp;
 
-  print_r($input);
+  //print_r($input);
 
   for ($i = 0; $i < $smallSize; $i+= 8){
     $expInp[] = $input [rand(0, 31)];
@@ -429,7 +491,7 @@ function expansionBox ($input){                     // takes input value array a
       $expInp[] = $input[$j - 2];
   }
 
-  print_r($expInp);
+  //print_r($expInp);
 
   return $expInp;
 }
@@ -552,5 +614,7 @@ function permuteBox ($input){           //  Permutation box function for shaking
     return $input;
   }
   shuffle($input);
+
+  return $input;
 
 }
