@@ -1,9 +1,13 @@
 <?PHP
 // indian beaten coffee ratio: for every 4-5 teaspoon of sugar crystals, use 1 heaped spoon of fine grain instant coffee with a few drops of water.
 $inp = "Hello";
-simpleCrypter($inp, "-xyzabcghidefjklqrsmnoptuvw");
-simpleDecrypter("hbffl", "-xyzabcghidefjklqrsmnoptuvw");
-RC4Crypter($inp, [5, 6, 10, 8, 9, 15, 21, 11, 13, 7, 23, 17, 19, 29, 31, 37, 41, 43, 47]);
+//simpleCrypter($inp, "-xyzabcghidefjklqrsmnoptuvw");
+//simpleDecrypter("hbffl", "-xyzabcghidefjklqrsmnoptuvw");
+//RC4Crypter($inp, [5, 6, 10, 8, 9, 15, 21, 11, 13, 7, 23, 17, 19, 29, 31, 37, 41, 43, 47]);
+
+//echo "\n".HexToTex("68656c6c6f")."\n";
+$list;
+expansionBox($list);
 
 function simpleCrypter($input, $key){          // simple substitution encrypter
   $keyLen = 27;
@@ -308,4 +312,110 @@ function RC4Decrypter ($input){
 
 function DESCrypter ($input){
 
+}
+
+function CrapTextToHex ($input){              // DEFUNCT FUNCTION
+  $binVal = "";
+  $i = 0;
+  $hexTable;
+  $answer;
+
+  $hexTable ['0'] = "0000";
+  $hexTable ['1'] = "0001";
+  $hexTable ['2'] = "0010";
+  $hexTable ['3'] = "0011";
+  $hexTable ['4'] = "0100";
+  $hexTable ['5'] = "0101";
+  $hexTable ['6'] = "0110";
+  $hexTable ['7'] = "0111";
+  $hexTable ['8'] = "1000";
+  $hexTable ['9'] = "1001";
+  $hexTable ['A'] = "1010";
+  $hexTable ['B'] = "1011";
+  $hexTable ['C'] = "1100";
+  $hexTable ['D'] = "1101";
+  $hexTable ['E'] = "1110";
+  $hexTable ['F'] = "1111";
+
+  foreach ($hexTable as $val1){
+    foreach ($hexTable as $index => $val2){
+      if ($val1 == $index){
+        $binVal = $val2;
+      }
+    }
+    $answer .= $binVal;
+  }
+  return $answer;
+}
+
+function TexToHex ($input){        // mcuh more efficient and better!
+  $answer = "";
+  $hexVal;
+  $ascVal;
+  $i = 0;
+
+  for ($i = 0; $i < strlen($input); $i++){
+    $ascVal = ord($input{$i});
+    $hexVal = dechex($ascVal);
+    $answer.= $hexVal;
+  }
+
+  return $answer;
+}
+
+function hexToTex($input){
+  $answer = "";
+  $texVal;
+  $ascVal;
+  $i = 0;
+
+  for ($i = 0; $i < strlen($input); $i += 2){
+    $ascVal = hexdec(substr($input, $i, 2));
+    $texVal = chr($ascVal);
+    $answer.= $texVal;
+  }
+
+  return $answer;
+}
+
+function msgProcess($input , $subKey){
+  $i = 0;
+  $initPerm;
+}
+
+function expansionBox ($input){                     // takes input value array and expands the 32 bit array into a 32 bit one
+  $smallSize = 32;
+  $i = 0;
+  $j = 0;
+  $k = 0;
+  $rounds = $smallSize / 4;
+
+  for ($i = 0; $i < $smallSize; $i++){            // for testing
+    $input [$i] = $i;
+  }
+
+  if (sizeOf($input) != $smallSize){
+    echo "Expansion box error! not a valid array for input! \n";
+    return;
+  }
+
+  $expInp;
+
+  print_r($input);
+
+  for ($i = 0; $i < $smallSize; $i+= 8){
+    $expInp[] = $input [rand(0, 31)];
+    $expInp[] = $input [rand(0, 31)];
+      for ($j = $i; $k < $rounds; $j++){
+        $expInp[] = $input[$j];
+        $k++;
+      }
+      $k = 0;
+      $expInp[] = $input[$j - 1];
+      $expInp[] = $input[$j - 2];
+  }
+
+  print_r($expInp);
+
+  return $expInp;
 }

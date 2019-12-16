@@ -1,0 +1,38 @@
+if(isset($_POST['en_or_de']) && isset($_POST['select_enc'])){
+    $mode = $_POST['en_or_de'];
+    $algo = $_POST['select_enc'];
+    if($mode==="encrypt"){
+        if($algo==="SS"){
+
+        }
+        elseif ($algo==="DT") {
+            # code...
+        }
+        elseif ($algo==="RC4") {
+            # code...
+        }
+        else{
+
+        }
+    }
+    else{
+        if($algo==="SS"){
+
+        }
+        elseif ($algo==="DT") {
+            # code...
+        }
+        elseif ($algo==="RC4") {
+            # code...
+        }
+        else{
+
+        }
+    }
+}
+
+phqgiumeaylnofdxjkrcvstzwb
+
+
+eaowfpoiarlpkcealpfgceararownprcprramfoifcafryrv
+
