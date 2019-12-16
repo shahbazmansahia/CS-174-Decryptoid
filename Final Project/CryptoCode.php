@@ -6,8 +6,8 @@ $inp = "Hello";
 //RC4Crypter($inp, [5, 6, 10, 8, 9, 15, 21, 11, 13, 7, 23, 17, 19, 29, 31, 37, 41, 43, 47]);
 
 //echo "\n".HexToTex("68656c6c6f")."\n";
-$list;
-expansionBox($list);
+//$list;
+//expansionBox($list);
 
 function simpleCrypter($input, $key){          // simple substitution encrypter
   $keyLen = 27;
@@ -378,9 +378,22 @@ function hexToTex($input){
   return $answer;
 }
 
-function msgProcess($input , $subKey){
+function msgProcess($input , $subKey){              // operation 2 on the right half of the message; performs XOR on expanded subkey and right half
+
+  $validSize = 48;
   $i = 0;
-  $initPerm;
+  $answer;
+
+  if ((sizeOf($input) != $validSize) || (sizeOf($subKey) != $validSize)){
+    echo "CANNOT XOR BITS! INVALID SIZE OF SUBKEY AND/OR ARRAY! \n";
+    return $answer;
+  }
+
+  for ($i = 0; $i < sizeOf($input); $i++){
+    $answer[] = $input[$i] XOR $subkKey[$i];
+  }
+
+  return $answer;
 }
 
 function expansionBox ($input){                     // takes input value array and expands the 32 bit array into a 32 bit one
@@ -390,10 +403,11 @@ function expansionBox ($input){                     // takes input value array a
   $k = 0;
   $rounds = $smallSize / 4;
 
+/*
   for ($i = 0; $i < $smallSize; $i++){            // for testing
     $input [$i] = $i;
   }
-
+*/
   if (sizeOf($input) != $smallSize){
     echo "Expansion box error! not a valid array for input! \n";
     return;
@@ -418,4 +432,125 @@ function expansionBox ($input){                     // takes input value array a
   print_r($expInp);
 
   return $expInp;
+}
+
+function subBox($input){        // the substition box in the DES encryption process
+  $validSize = 32;
+  $reducedVal;
+  if (sizeOf($input) != $validSize){
+    echo "SIZE OF INPUT NOT VALID FOR S BOX! \n";
+  }
+
+  //      ROW  1 FOR LOOKUP TABLE IN THE FORM OF AN ASSOCIATIVE ARRAY
+  $lookupTable ["00"] ["0000"] = "1110";
+  $lookupTable ["00"] ["0001"] = "0100";
+  $lookupTable ["00"] ["0010"] = "1101";
+  $lookupTable ["00"] ["0011"] = "0001";
+  $lookupTable ["00"] ["0100"] = "0010";
+  $lookupTable ["00"] ["0101"] = "1111";
+  $lookupTable ["00"] ["0110"] = "1011";
+  $lookupTable ["00"] ["0111"] = "1000";
+  $lookupTable ["00"] ["1000"] = "0011";
+  $lookupTable ["00"] ["1001"] = "1010";
+  $lookupTable ["00"] ["1010"] = "0110";
+  $lookupTable ["00"] ["1011"] = "1100";
+  $lookupTable ["00"] ["1100"] = "0101";
+  $lookupTable ["00"] ["1101"] = "1001";
+  $lookupTable ["01"] ["1110"] = "0000";
+  $lookupTable ["00"] ["1111"] = "0111";
+
+  //      ROW  2 FOR LOOKUP TABLE IN THE FORM OF AN ASSOCIATIVE ARRAY
+  $lookupTable ["01"] ["0000"] = "0000";
+  $lookupTable ["01"] ["0001"] = "1111";
+  $lookupTable ["01"] ["0010"] = "0111";
+  $lookupTable ["01"] ["0011"] = "0100";
+  $lookupTable ["01"] ["0100"] = "1110";
+  $lookupTable ["01"] ["0101"] = "0010";
+  $lookupTable ["01"] ["0110"] = "1101";
+  $lookupTable ["01"] ["0111"] = "0001";
+  $lookupTable ["01"] ["1000"] = "1010";
+  $lookupTable ["01"] ["1001"] = "0110";
+  $lookupTable ["01"] ["1010"] = "1100";
+  $lookupTable ["01"] ["1011"] = "1011";
+  $lookupTable ["01"] ["1100"] = "1001";
+  $lookupTable ["01"] ["1101"] = "0101";
+  $lookupTable ["01"] ["1110"] = "0011";
+  $lookupTable ["01"] ["1111"] = "1000";
+
+  //      ROW  3 FOR LOOKUP TABLE IN THE FORM OF AN ASSOCIATIVE ARRAY
+  $lookupTable ["10"] ["0000"] = "0100";
+  $lookupTable ["10"] ["0001"] = "0001";
+  $lookupTable ["10"] ["0010"] = "1110";
+  $lookupTable ["10"] ["0011"] = "1000";
+  $lookupTable ["10"] ["0100"] = "1101";
+  $lookupTable ["10"] ["0101"] = "0110";
+  $lookupTable ["10"] ["0110"] = "0010";
+  $lookupTable ["10"] ["0111"] = "1011";
+  $lookupTable ["10"] ["1000"] = "1111";
+  $lookupTable ["10"] ["1001"] = "1100";
+  $lookupTable ["10"] ["1010"] = "1001";
+  $lookupTable ["10"] ["1011"] = "0111";
+  $lookupTable ["10"] ["1100"] = "0011";
+  $lookupTable ["10"] ["1101"] = "1010";
+  $lookupTable ["10"] ["1110"] = "0101";
+  $lookupTable ["10"] ["1111"] = "0000";
+
+  //      ROW  4 FOR LOOKUP TABLE IN THE FORM OF AN ASSOCIATIVE ARRAY
+  $lookupTable ["11"] ["0000"] = "1111";
+  $lookupTable ["11"] ["0001"] = "1100";
+  $lookupTable ["11"] ["0010"] = "1000";
+  $lookupTable ["11"] ["0011"] = "0010";
+  $lookupTable ["11"] ["0100"] = "0100";
+  $lookupTable ["11"] ["0101"] = "1001";
+  $lookupTable ["11"] ["0110"] = "0001";
+  $lookupTable ["11"] ["0111"] = "0111";
+  $lookupTable ["11"] ["1000"] = "0101";
+  $lookupTable ["11"] ["1001"] = "1011";
+  $lookupTable ["11"] ["1010"] = "0011";
+  $lookupTable ["11"] ["1011"] = "1110";
+  $lookupTable ["11"] ["1100"] = "1010";
+  $lookupTable ["11"] ["1101"] = "0000";
+  $lookupTable ["11"] ["1110"] = "0110";
+  $lookupTable ["11"] ["1111"] = "1101";
+
+  $paddedBits = "";
+  $centralBits = "";
+  $numBits = 6;                 // number of bits in each value in the array
+  $firstIn = 0;
+  $lastIn = 5;
+  $temp = "";
+
+  for ($i = 0; $i < sizeOf($input); $i++){      // looksup values in the table and gets the reduced values
+    for ($j = 0; $j < $numBits; $j++){
+      $temp = $input[$i];
+
+      if ($j === $firstIn){
+        $paddedBits .= $temp{$j};
+      }
+
+      elseif ($j === $lastIn){
+        $paddedBits .= $temp{$j};
+      }
+
+      else{
+        $centralBits .= $temp{$j};
+      }
+    }
+
+    $reducedVal[] = $lookupTable [$paddedBits] [$centralBits];
+    $paddedBits = "";
+    $centralBits = "";
+  }
+
+  return $reducedVal;
+}
+
+function permuteBox ($input){           //  Permutation box function for shaking up the vals in the array
+  $validSize = 32;
+  if (sizeOf($input) != $validSize){
+    echo "ERROR IN P-BOX! INVALID SIZE FOR INPUT ARRAY! \n";
+    return $input;
+  }
+  shuffle($input);
+
 }
