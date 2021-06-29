@@ -24,21 +24,25 @@ function forums(){
 		echo <<<_END
 		    <body>
 				<nav class="navbar navbar-dark">
-					<h1>Login/Signup</h1>
+					
 				</nav>
 				<div class="container">
 					<div class="row">
-						<div class="col">
-							
+						<div class="col-lg-6">
+							<div class="card bg-dark text-light">
+								<div class= "card-header">
+									<h2>Login</h2>
+								</div>
+								<div class= "card-body">
+									<form method ='post' action='#' enctype="multipart/form-data" class= "form-group">
+										<input class= "form-control" type="text" name="RegistrationUserName" placeholder="Username"><br>
+										<input class= "form-control" type="password" name="RegistrationPassword" placeholder="Password"><br>
+										<input class= "form-control btn btn-success" type="submit" value="Login" />
+									</form>
+								</div>
+							</div>
 
-		        			<hr/>
-
-							<h2>Login</h2>
-							<form method ='post' action='#' enctype="multipart/form-data" class= "form-group">
-								<input class= "form-control" type="text" name="RegistrationUserName" placeholder="Username"><br>
-								<input class= "form-control" type="password" name="RegistrationPassword" placeholder="Password"><br>
-								<input class= "form-control btn btn-success" type="submit" value="Login" />
-							</form>
+		        			
 						</div>
 					</div>
 				</div>
